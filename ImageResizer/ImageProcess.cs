@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace ImageResizer
 {
@@ -40,54 +38,26 @@ namespace ImageResizer
         public void ResizeImages(string sourcePath, string destPath, double scale)
         {
             var allFiles = FindImages(sourcePath);
-            Task[] tasks = new Task[allFiles.Count];
-            Console.WriteLine(allFiles.Count);
-
-            for (int i=0;i<allFiles.Count;i++ )
-
-            //foreach (var filePath in allFiles)
+            foreach (var filePath in allFiles)
             {
+                Image imgPhoto = Image.FromFile(filePath);
+                string imgName = Path.GetFileNameWithoutExtension(filePath);
 
-                //Image imgPhoto = Image.FromFile(filePath);
-                //string imgName = Path.GetFileNameWithoutExtension(filePath);
+                int sourceWidth = imgPhoto.Width;
+                int sourceHeight = imgPhoto.Height;
 
-                //int sourceWidth = imgPhoto.Width;
-                //int sourceHeight = imgPhoto.Height;
+                int destionatonWidth = (int)(sourceWidth * scale);
+                int destionatonHeight = (int)(sourceHeight * scale);
 
-                //int destionatonWidth = (int)(sourceWidth * scale);
-                //int destionatonHeight = (int)(sourceHeight * scale);
+                Bitmap processedImage = processBitmap((Bitmap)imgPhoto,
+                    sourceWidth, sourceHeight,
+                    destionatonWidth, destionatonHeight);
 
-                //Bitmap processedImage = processBitmap((Bitmap)imgPhoto,
-                //    sourceWidth, sourceHeight,
-                //    destionatonWidth, destionatonHeight);
-
-                //string destFile = Path.Combine(destPath, imgName + ".jpg");
-                //processedImage.Save(destFile, ImageFormat.Jpeg);
-                //Console.WriteLine($"{imgName} is finish");
-                Console.WriteLine($"Task {i} , {allFiles[i]}" );
-                tasks[i]=Task.Run(async()=>await GoResize(allFiles[i], destPath, scale));
+                string destFile = Path.Combine(destPath, imgName + ".jpg");
+                processedImage.Save(destFile, ImageFormat.Jpeg);
             }
-            Task.WhenAll(tasks);
         }
-        public async Task GoResize(string filePath,string destPath, double scale)
-        {
-            Image imgPhoto = Image.FromFile(filePath);
-            string imgName = Path.GetFileNameWithoutExtension(filePath);
 
-            int sourceWidth = imgPhoto.Width;
-            int sourceHeight = imgPhoto.Height;
-
-            int destionatonWidth = (int)(sourceWidth * scale);
-            int destionatonHeight = (int)(sourceHeight * scale);
-            string destFile = Path.Combine(destPath, imgName + ".jpg");
-            Bitmap processedImage = processBitmap((Bitmap)imgPhoto,
-                sourceWidth, sourceHeight,
-                destionatonWidth, destionatonHeight);
-
-            
-            processedImage.Save(destFile, ImageFormat.Jpeg);
-            Console.WriteLine($"{imgName} is finish");
-        }
         /// <summary>
         /// 找出指定目錄下的圖片
         /// </summary>

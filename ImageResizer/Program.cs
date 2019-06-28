@@ -24,7 +24,6 @@ namespace ImageResizer
             sw.Stop();
 
             Console.WriteLine($"花費時間: {sw.ElapsedMilliseconds} ms");
-            Console.ReadKey();
         }
     }
 }
