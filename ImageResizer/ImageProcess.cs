@@ -24,10 +24,14 @@ namespace ImageResizer
             {
                 var allImageFiles = Directory.GetFiles(destPath, "*", SearchOption.AllDirectories);
 
+                int i = 0;
+                Task[] tasks = new Task[allImageFiles.Length];
                 foreach (var item in allImageFiles)
                 {
-                    File.Delete(item);
+                    tasks[i]=Task.Run(()=>File.Delete(item));
+                    i++;
                 }
+                Task.WaitAll(tasks);
             }
         }
 
