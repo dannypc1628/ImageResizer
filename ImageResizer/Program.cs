@@ -20,10 +20,13 @@ namespace ImageResizer
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            imageProcess.ResizeImages(sourcePath, destinationPath, 2.0);
+            var result = imageProcess.ResizeImages(sourcePath, destinationPath, 2.0);
+            Task.WaitAll(result);
+            
             sw.Stop();
 
             Console.WriteLine($"花費時間: {sw.ElapsedMilliseconds} ms");
+            Console.ReadKey();
         }
     }
 }
